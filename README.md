@@ -10,13 +10,9 @@ liberty-cicd-security
 -   Use Infrastructure as Code (terraform), and CI/CD (AWS CodePipeline) to
     launch EKS/Fargate container infrastructure on AWS.
 
- 
-
 -   Deploy a simple containerized application (based on deploying micro services
     to EKS Fargate
     [https://www.eksworkshop.com/beginner/180_fargate/](https://www.eksworkshop.com/beginner/180_fargate/)).
-
- 
 
 -   Integrate the Anchore open-source tool for deep analysis of the docker
     images.
@@ -43,10 +39,20 @@ Steps:
 
 1.  Clone the repo, cd into repo base directory
 
-2.  Bootstrap CodePipeline (cd bootstrap && terraform init && terraform apply)
+2.  Bootstrap terraform (cd bootstrap && ./bootstrap.sh)
 
-    -   bootstrap creates:
+    -   The bootstrap creates:
 
         -   S3 buckets for tf state and pipeline artifacts
 
         -   Dynamo DB for terraform state locking
+
+3.  Bootstrap CodePipeline (cd bootstrap && ./bootstrap.sh)
+
+    -   The bootstrap creates:
+
+        -   S3 buckets for tf state and pipeline artifacts
+
+        -   Dynamo DB for terraform state locking
+
+ 
