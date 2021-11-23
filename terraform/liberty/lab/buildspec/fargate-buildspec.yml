@@ -1,0 +1,18 @@
+version: 0.2
+env:
+  variables:
+    AWS_REGION: "us-east-2"
+phases:
+  pre_build:
+    commands: |
+      eksctl version
+      eksctl get fargateprofile  --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  -o yaml ||
+      eksctl create fargateprofile --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  --name liberty-app --namespace liberty-app
+
+  
+  build:
+    commands: |
+      eksctl get fargateprofile  --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  -o yaml &&
+      eksctl utils associate-iam-oidc-provider --region ${AWS_REGION} --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')" --approve
+
+

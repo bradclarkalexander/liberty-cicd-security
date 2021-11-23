@@ -1,0 +1,15 @@
+version: 0.2
+env:
+  variables:
+    AWS_REGION: "us-east-2"
+    ACCOUNT_ID: "795461177457"
+phases:
+  pre_build:
+    commands:
+      - export CLUSTER="$(eksctl get cluster | grep liberty | awk '{print $1}')"
+  
+  build:
+    commands: |
+      echo "CLUSTER: $CLUSTER"
+      eksctl create iamserviceaccount  --cluster "$CLUSTER"  --namespace kube-system  --name aws-load-balancer-controller  --attach-policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy  --override-existing-serviceaccounts  --approve
+
