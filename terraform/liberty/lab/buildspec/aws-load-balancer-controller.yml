@@ -11,6 +11,7 @@ phases:
   build:
     commands: |
       echo "CLUSTER: $CLUSTER"
-      eksctl delete iamserviceaccount  --cluster "$CLUSTER"  --namespace kube-system  --name aws-load-balancer-controller
+      sleep 90
+      eksctl delete iamserviceaccount  --cluster "$CLUSTER"  --namespace kube-system  --name aws-load-balancer-controller || true
       eksctl create iamserviceaccount  --cluster "$CLUSTER"  --namespace kube-system  --name aws-load-balancer-controller  --attach-policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy  --override-existing-serviceaccounts  --approve
 
