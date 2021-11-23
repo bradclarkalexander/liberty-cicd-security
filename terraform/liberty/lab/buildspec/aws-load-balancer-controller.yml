@@ -2,10 +2,10 @@ version: 0.2
 env:
   variables:
     AWS_REGION: "us-east-2"
-    ACCOUNT_ID: "795461177457"
 phases:
   pre_build:
     commands:
+      - export ACCOUNT_ID=$(aws sts get-caller-identity | grep Account | tr -d '":,' | awk '{print $2}')
       - export CLUSTER="$(eksctl get cluster | grep liberty | awk '{print $1}')"
   
   build:
