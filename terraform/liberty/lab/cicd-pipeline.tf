@@ -63,7 +63,7 @@ resource "aws_codebuild_project" "aws-load-balancer-controller" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "weaveworks/eksctl:0.71.0"
+    image                       = "jshimko/kube-tools-aws"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "SERVICE_ROLE"
     registry_credential{
