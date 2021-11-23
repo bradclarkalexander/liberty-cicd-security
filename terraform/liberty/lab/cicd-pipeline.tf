@@ -63,7 +63,7 @@ resource "aws_codebuild_project" "aws-load-balancer-controller" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "alpine/k8s"
+    image                       = "integrational/aws-eks-kube-docker-cli"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "SERVICE_ROLE"
     registry_credential{
@@ -125,6 +125,31 @@ resource "aws_codebuild_project" "targetgroupbinding-crd" {
  source {
      type   = "CODEPIPELINE"
      buildspec = file("buildspec/targetgroupbinding-crd.yml")
+ }
+}
+
+resource "aws_codebuild_project" "deploy-helm-chart" {
+  name          = "deploy-helm-chart"
+  description   = "Deploy the Helm chart from the Amazon EKS charts repo"
+  service_role  = aws_iam_role.liberty-app-codebuild-role.arn
+
+  artifacts {
+    type = "CODEPIPELINE"
+  }
+
+  environment {
+    compute_type                = "BUILD_GENERAL1_SMALL"
+    image                       = "subhakarkotta/terraform-kubectl-helm-awscli"
+    type                        = "LINUX_CONTAINER"
+    image_pull_credentials_type = "SERVICE_ROLE"
+    registry_credential{
+        credential = var.dockerhub_credentials
+        credential_provider = "SECRETS_MANAGER"
+    }
+ }
+ source {
+     type   = "CODEPIPELINE"
+     buildspec = file("buildspec/deploy-helm-chart.yml")
  }
 }
 
@@ -227,4 +252,18 @@ resource "aws_codepipeline" "cicd_pipeline" {
         }
     }
 
+    stage {
+        name ="DeployHelmChart"
+        action{
+            name = "Deploy"
+            category = "Build"
+            provider = "CodeBuild"
+            version = "1"
+            owner = "AWS"
+            input_artifacts = ["liberty-app-code"]
+            configuration = {
+                ProjectName = "deploy-helm-chart"
+            }
+        }
+    }
 }
