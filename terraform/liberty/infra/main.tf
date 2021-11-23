@@ -13,7 +13,7 @@ locals {
 ################################################################################
 
 module "eks" {
-  source = "../../.."
+  source = "../../../library/"
 
   cluster_name    = local.name
   cluster_version = local.cluster_version
@@ -161,19 +161,19 @@ module "eks" {
 ################################################################################
 
 module "disabled_eks" {
-  source = "../../.."
+  source = "../../../library/"
 
   create_eks = false
 }
 
 module "disabled_fargate" {
-  source = "../../../modules/fargate"
+  source = "../../../library/modules/fargate"
 
   create_fargate_pod_execution_role = false
 }
 
 module "disabled_node_groups" {
-  source = "../../../modules/node_groups"
+  source = "../../../library/modules/node_groups"
 
   create_eks = false
 }
