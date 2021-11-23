@@ -1,0 +1,17 @@
+version: 0.2
+env:
+  variables:
+    AWS_REGION: "us-east-2"
+phases:
+  pre_build:
+    commands:
+      - cd terraform/liberty/infra || true
+      - pwd
+      - terraform init
+      - terraform validate
+  
+  build:
+    commands:
+      - cd terraform/liberty/infra/infra || true
+      - pwd
+      - terraform plan
