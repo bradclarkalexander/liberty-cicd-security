@@ -6,10 +6,13 @@ phases:
   pre_build:
     commands: |
       eksctl version
-      until [ eksctl get fargateprofile  --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  -o yaml ]; do
+      set +e
+      until eksctl get fargateprofile  --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  -o yaml 
+      do
           echo "Waiting for cluster to come up"
           sleep 90
       done
+      set -e
       eksctl create fargateprofile --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  --name liberty-app --namespace liberty-app
 
   
