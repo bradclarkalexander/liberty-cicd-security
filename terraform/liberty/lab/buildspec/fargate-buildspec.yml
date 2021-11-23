@@ -12,9 +12,17 @@ phases:
           echo "Waiting for cluster to come up"
           sleep 90
       done
+      until eksctl get nodegroup --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"
+      do
+          echo "Waiting for NodeGroup"
+          sleep 90
+      done
+      until eksctl create fargateprofile --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  --name liberty-app --namespace liberty-app
+      do
+          echo "Waiting for cluster to be ready"
+          sleep 90
+      done
       set -e
-      eksctl create fargateprofile --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  --name liberty-app --namespace liberty-app
-
   
   build:
     commands: |
