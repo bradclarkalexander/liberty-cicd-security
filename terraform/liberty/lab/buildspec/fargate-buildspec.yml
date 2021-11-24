@@ -6,6 +6,7 @@ phases:
   pre_build:
     commands: |
       eksctl version
+      #eksctl create cluster --name liberty --region $AWS_REGION --fargate
       set +e
       until eksctl get fargateprofile  --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  -o yaml 
       do

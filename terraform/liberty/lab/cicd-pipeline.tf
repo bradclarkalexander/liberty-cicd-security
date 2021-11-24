@@ -63,7 +63,8 @@ resource "aws_codebuild_project" "aws-load-balancer-controller" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "integrational/aws-eks-kube-docker-cli"
+    #image                       = "integrational/aws-eks-kube-docker-cli"
+    image                       = "mreferre/eksutils"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "SERVICE_ROLE"
     registry_credential{
@@ -114,7 +115,8 @@ resource "aws_codebuild_project" "targetgroupbinding-crd" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "jshimko/kube-tools-aws"
+    #image                       = "jshimko/kube-tools-aws"
+    image                       = "mreferre/eksutils"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "SERVICE_ROLE"
     registry_credential{

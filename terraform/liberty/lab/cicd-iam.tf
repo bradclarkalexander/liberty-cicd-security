@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_role" "liberty-app-codepipeline-role" {
   name = "liberty-app-codepipeline-role"
 
@@ -57,7 +59,8 @@ resource "aws_iam_role" "liberty-app-codebuild-role" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "Service": "codebuild.amazonaws.com"
+        "Service": "codebuild.amazonaws.com",
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
       },
       "Effect": "Allow",
       "Sid": ""
