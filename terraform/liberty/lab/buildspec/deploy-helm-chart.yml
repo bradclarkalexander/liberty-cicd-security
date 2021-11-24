@@ -6,7 +6,7 @@ env:
 phases:
   pre_build:
     commands:
-      - cd terraform/liberty/infra
+      - cd terraform/liberty/lab
       - export ACCOUNT=$(aws sts get-caller-identity | grep Account | tr -d '":,' | awk '{print $2}')
       - export CLUSTER=$(aws eks list-clusters | grep liberty | tr -d ' "')
       - export VPC_ID=$(aws eks describe-cluster --name ${CLUSTER} --query "cluster.resourcesVpcConfig.vpcId"  --output text)
@@ -18,10 +18,11 @@ phases:
       - #kubectl delete deploy aws-load-balancer-controller -n kube-system || true
       - helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=${CLUSTER} --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --set image.tag="${LBC_VERSION}" --set region=${AWS_REGION} --set vpcId=${VPC_ID}
       - kubectl -n kube-system rollout status deployment aws-load-balancer-controller
-      - kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/examples/2048/2048_full.yaml 
-      - export FARGATE_GAME_2048=$(kubectl get ingress/ingress-2048 -n game-2048 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+      - #kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/examples/2048/2048_full.yaml 
+      - kubectl apply -f app.yml
+      - export FARGATE_GAME_2048=$(kubectl get ingress/ingress-2048  -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
       - kubectl get nodes
-      - kubectl get ingress/ingress-2048 -n game-2048
+      - kubectl get ingress/ingress-2048 
       - echo "http://${FARGATE_GAME_2048}"
 
 

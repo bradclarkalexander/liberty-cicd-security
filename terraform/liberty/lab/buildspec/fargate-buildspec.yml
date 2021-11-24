@@ -6,23 +6,23 @@ phases:
   pre_build:
     commands: |
       eksctl version
-      #eksctl create cluster --name liberty --region $AWS_REGION --fargate
+      eksctl create cluster --name liberty-ipa --region $AWS_REGION --fargate
       set +e
-      until eksctl get fargateprofile  --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  -o yaml 
-      do
-          echo "Waiting for cluster to come up"
-          sleep 90
-      done
-      until eksctl get nodegroup --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"
-      do
-          echo "Waiting for NodeGroup"
-          sleep 90
-      done
-      until eksctl create fargateprofile --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  --name liberty-app --namespace liberty-app
-      do
-          echo "Waiting for cluster to be ready"
-          sleep 90
-      done
+      #until eksctl get fargateprofile  --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  -o yaml 
+      #do
+      #    echo "Waiting for cluster to come up"
+      #    sleep 90
+      #done
+      #until eksctl get nodegroup --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"
+      #do
+      #    echo "Waiting for NodeGroup"
+      #    sleep 90
+      #done
+      #until eksctl create fargateprofile --cluster "$(eksctl get cluster | grep liberty | awk '{print $1}')"  --name liberty-app --namespace liberty-app
+      #do
+      #    echo "Waiting for cluster to be ready"
+      #    sleep 90
+      #done
       set -e
   
   build:
