@@ -6,12 +6,10 @@ phases:
   pre_build:
     commands:
       - cd terraform/liberty/infra || true
-      - pwd
       - terraform init
       - terraform validate
   
   build:
     commands:
       - cd terraform/liberty/infra/infra || true
-      - pwd
       - terraform plan
