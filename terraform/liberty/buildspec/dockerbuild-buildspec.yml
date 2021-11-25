@@ -1,12 +1,23 @@
 version: 0.2
 env:
+  secrets-manager:
+    USERNAME: "codebuild/dockerhub:Username"
+    PASSWORD: "codebuild/dockerhub:Password"
   variables:
     AWS_REGION: "us-east-2"
 phases:
   pre_build:
     commands:
-  
+      - docker login -p ${PASSWORD} -u ${USERNAME} 
+      - curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
   build:
     commands:
-      - cd terraform/liberty/sample-app || true
-      - docker version
+      - cd frontend || true
+      - docker build -t bradatrr/sample-app .
+      - docker tag bradatrr/sample-app bradatrr/sample-app
+      - docker tag bradatrr/sample-app bradatrr/sample-app
+      - grype docker:bradatrr/sample-app:latest --file scan_results
+      - cat scan_results |  egrep --color "High|Critical|$"
+      - egrep "High|Critical" && exit 1
+      - docker push bradatrr/sample-app 
+     
