@@ -157,7 +157,7 @@ resource "aws_codebuild_project" "deploy-helm-chart" {
 
 resource "aws_codepipeline" "cicd_pipeline" {
 
-    name = "liberty-app-cicd"
+    name = "liberty-ipa-cicd"
     role_arn = aws_iam_role.liberty-app-codepipeline-role.arn
 
     artifact_store {
