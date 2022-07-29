@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
-resource "aws_iam_role" "liberty-app-codepipeline-role" {
-  name = "liberty-app-codepipeline-role"
+resource "aws_iam_role" "bca-app-codepipeline-role" {
+  name = "bca-app-codepipeline-role"
 
   assume_role_policy = <<EOF
 {
@@ -21,7 +21,7 @@ EOF
 
 }
 
-data "aws_iam_policy_document" "liberty-app-cicd-pipeline-policies" {
+data "aws_iam_policy_document" "bca-app-cicd-pipeline-policies" {
     statement{
         sid = ""
         actions = ["codestar-connections:UseConnection"]
@@ -36,21 +36,21 @@ data "aws_iam_policy_document" "liberty-app-cicd-pipeline-policies" {
     }
 }
 
-resource "aws_iam_policy" "liberty-app-cicd-pipeline-policy" {
-    name = "liberty-app-cicd-pipeline-policy"
+resource "aws_iam_policy" "bca-app-cicd-pipeline-policy" {
+    name = "bca-app-cicd-pipeline-policy"
     path = "/"
     description = "Pipeline policy"
-    policy = data.aws_iam_policy_document.liberty-app-cicd-pipeline-policies.json
+    policy = data.aws_iam_policy_document.bca-app-cicd-pipeline-policies.json
 }
 
-resource "aws_iam_role_policy_attachment" "liberty-app-cicd-pipeline-attachment" {
-    policy_arn = aws_iam_policy.liberty-app-cicd-pipeline-policy.arn
-    role = aws_iam_role.liberty-app-codepipeline-role.id
+resource "aws_iam_role_policy_attachment" "bca-app-cicd-pipeline-attachment" {
+    policy_arn = aws_iam_policy.bca-app-cicd-pipeline-policy.arn
+    role = aws_iam_role.bca-app-codepipeline-role.id
 }
 
 
-resource "aws_iam_role" "liberty-app-codebuild-role" {
-  name = "liberty-app-codebuild-role"
+resource "aws_iam_role" "bca-app-codebuild-role" {
+  name = "bca-app-codebuild-role"
 
   assume_role_policy = <<EOF
 {
@@ -71,7 +71,7 @@ EOF
 
 }
 
-data "aws_iam_policy_document" "liberty-app-cicd-build-policies" {
+data "aws_iam_policy_document" "bca-app-cicd-build-policies" {
     statement{
         sid = ""
         actions = ["logs:*", "s3:*", "codebuild:*", "secretsmanager:*","iam:*"]
@@ -80,19 +80,19 @@ data "aws_iam_policy_document" "liberty-app-cicd-build-policies" {
     }
 }
 
-resource "aws_iam_policy" "liberty-app-cicd-build-policy" {
-    name = "liberty-app-cicd-build-policy"
+resource "aws_iam_policy" "bca-app-cicd-build-policy" {
+    name = "bca-app-cicd-build-policy"
     path = "/"
     description = "Codebuild policy"
-    policy = data.aws_iam_policy_document.liberty-app-cicd-build-policies.json
+    policy = data.aws_iam_policy_document.bca-app-cicd-build-policies.json
 }
 
-resource "aws_iam_role_policy_attachment" "liberty-app-cicd-codebuild-attachment1" {
-    policy_arn  = aws_iam_policy.liberty-app-cicd-build-policy.arn
-    role        = aws_iam_role.liberty-app-codebuild-role.id
+resource "aws_iam_role_policy_attachment" "bca-app-cicd-codebuild-attachment1" {
+    policy_arn  = aws_iam_policy.bca-app-cicd-build-policy.arn
+    role        = aws_iam_role.bca-app-codebuild-role.id
 }
 
-resource "aws_iam_role_policy_attachment" "liberty-app-cicd-codebuild-attachment2" {
+resource "aws_iam_role_policy_attachment" "bca-app-cicd-codebuild-attachment2" {
     policy_arn  = "arn:aws:iam::aws:policy/PowerUserAccess"
-    role        = aws_iam_role.liberty-app-codebuild-role.id
+    role        = aws_iam_role.bca-app-codebuild-role.id
 }

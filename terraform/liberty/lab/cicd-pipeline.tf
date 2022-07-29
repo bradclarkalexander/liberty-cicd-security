@@ -5,7 +5,7 @@ data "aws_s3_bucket" "codepipeline_artifacts" {
 resource "aws_codebuild_project" "fargate-profile" {
   name          = "fargate-profile"
   description   = "Create a fargate profile"
-  service_role  = aws_iam_role.liberty-app-codebuild-role.arn
+  service_role  = aws_iam_role.bca-app-codebuild-role.arn
 
   artifacts {
     type = "CODEPIPELINE"
@@ -30,7 +30,7 @@ resource "aws_codebuild_project" "fargate-profile" {
 resource "aws_codebuild_project" "iam-policy" {
   name          = "create-iam-policy"
   description   = "Create a IAM role and ServiceAccount for the Load Balancer controller"
-  service_role  = aws_iam_role.liberty-app-codebuild-role.arn
+  service_role  = aws_iam_role.bca-app-codebuild-role.arn
 
   artifacts {
     type = "CODEPIPELINE"
@@ -55,7 +55,7 @@ resource "aws_codebuild_project" "iam-policy" {
 resource "aws_codebuild_project" "aws-load-balancer-controller" {
   name          = "aws-load-balancer-controller"
   description   = "CloudFormation template that creates an IAM role and attaches the IAM policy to it"
-  service_role  = aws_iam_role.liberty-app-codebuild-role.arn
+  service_role  = aws_iam_role.bca-app-codebuild-role.arn
 
   artifacts {
     type = "CODEPIPELINE"
@@ -81,7 +81,7 @@ resource "aws_codebuild_project" "aws-load-balancer-controller" {
 #resource "aws_codebuild_project" "lb-controller" {
 #  name          = "lb-controller-setup"
 #  description   = "Set up the lb controller"
-#  service_role  = aws_iam_role.liberty-app-codebuild-role.arn
+#  service_role  = aws_iam_role.bca-app-codebuild-role.arn
 #
 #  artifacts {
 #    type = "CODEPIPELINE"
@@ -107,7 +107,7 @@ resource "aws_codebuild_project" "aws-load-balancer-controller" {
 resource "aws_codebuild_project" "targetgroupbinding-crd" {
   name          = "targetgroupbinding-crd"
   description   = "Install the TargetGroupBinding CRDs"
-  service_role  = aws_iam_role.liberty-app-codebuild-role.arn
+  service_role  = aws_iam_role.bca-app-codebuild-role.arn
 
   artifacts {
     type = "CODEPIPELINE"
@@ -133,7 +133,7 @@ resource "aws_codebuild_project" "targetgroupbinding-crd" {
 resource "aws_codebuild_project" "deploy-helm-chart" {
   name          = "deploy-helm-chart"
   description   = "Deploy the Helm chart from the Amazon EKS charts repo"
-  service_role  = aws_iam_role.liberty-app-codebuild-role.arn
+  service_role  = aws_iam_role.bca-app-codebuild-role.arn
 
   artifacts {
     type = "CODEPIPELINE"
@@ -157,8 +157,8 @@ resource "aws_codebuild_project" "deploy-helm-chart" {
 
 resource "aws_codepipeline" "cicd_pipeline" {
 
-    name = "liberty-ipa-cicd"
-    role_arn = aws_iam_role.liberty-app-codepipeline-role.arn
+    name = "bca-ipa-cicd"
+    role_arn = aws_iam_role.bca-app-codepipeline-role.arn
 
     artifact_store {
         type="S3"
@@ -173,7 +173,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
             owner = "AWS"
             provider = "CodeStarSourceConnection"
             version = "1"
-            output_artifacts = ["liberty-app-code"]
+            output_artifacts = ["bca-app-code"]
             configuration = {
                 FullRepositoryId = "bradclarkalexander/liberty-cicd-security"
                 BranchName   = "main"
@@ -191,7 +191,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
             provider = "CodeBuild"
             version = "1"
             owner = "AWS"
-            input_artifacts = ["liberty-app-code"]
+            input_artifacts = ["bca-app-code"]
             configuration = {
                 ProjectName = "fargate-profile"
             }
@@ -217,7 +217,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
             provider = "CodeBuild"
             version = "1"
             owner = "AWS"
-            input_artifacts = ["liberty-app-code"]
+            input_artifacts = ["bca-app-code"]
             configuration = {
                 ProjectName = "create-iam-policy"
             }
@@ -232,7 +232,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
             provider = "CodeBuild"
             version = "1"
             owner = "AWS"
-            input_artifacts = ["liberty-app-code"]
+            input_artifacts = ["bca-app-code"]
             configuration = {
                 ProjectName = "aws-load-balancer-controller"
             }
@@ -247,7 +247,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
             provider = "CodeBuild"
             version = "1"
             owner = "AWS"
-            input_artifacts = ["liberty-app-code"]
+            input_artifacts = ["bca-app-code"]
             configuration = {
                 ProjectName = "targetgroupbinding-crd"
             }
@@ -262,7 +262,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
             provider = "CodeBuild"
             version = "1"
             owner = "AWS"
-            input_artifacts = ["liberty-app-code"]
+            input_artifacts = ["bca-app-code"]
             configuration = {
                 ProjectName = "deploy-helm-chart"
             }

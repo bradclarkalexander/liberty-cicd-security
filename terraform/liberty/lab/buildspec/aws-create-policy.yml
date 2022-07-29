@@ -5,7 +5,7 @@ env:
 phases:
   pre_build:
     commands:
-      - cd terraform/liberty/lab 
+      - cd terraform/bca/lab 
   
   build:
     commands: |

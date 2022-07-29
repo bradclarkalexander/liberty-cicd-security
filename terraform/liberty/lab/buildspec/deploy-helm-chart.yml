@@ -6,9 +6,9 @@ env:
 phases:
   pre_build:
     commands:
-      - cd terraform/liberty/lab
+      - cd terraform/bca/lab
       - export ACCOUNT=$(aws sts get-caller-identity | grep Account | tr -d '":,' | awk '{print $2}')
-      - export CLUSTER=$(aws eks list-clusters | grep liberty | tr -d ' "')
+      - export CLUSTER=$(aws eks list-clusters | grep bca | tr -d ' "')
       - export VPC_ID=$(aws eks describe-cluster --name ${CLUSTER} --query "cluster.resourcesVpcConfig.vpcId"  --output text)
       - helm repo add eks https://aws.github.io/eks-charts
   build:

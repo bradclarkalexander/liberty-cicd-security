@@ -6,7 +6,7 @@ phases:
   pre_build:
     commands:
       - export ACCOUNT_ID=$(aws sts get-caller-identity | grep Account | tr -d '":,' | awk '{print $2}')
-      - export CLUSTER="$(eksctl get cluster | grep liberty | awk '{print $1}')"
+      - export CLUSTER="$(eksctl get cluster | grep bca | awk '{print $1}')"
       - aws sts get-caller-identity
       - #OUT=$(aws sts assume-role --role-arn arn:aws:iam::${ACCOUNT_ID}:role/tf-codebuild-role --role-session-name aaa);\
       - #export AWS_ACCESS_KEY_ID=$(echo $OUT | jq -r '.Credentials''.AccessKeyId');\
