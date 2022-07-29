@@ -1,0 +1,17 @@
+version: 0.2
+env:
+  secrets-manager:
+    USERNAME: "codebuild/dockerhub:Username"
+    PASSWORD: "codebuild/dockerhub:Password"
+  variables:
+    AWS_REGION: "us-east-2"
+phases:
+  pre_build:
+    commands:
+      - grype help
+      - docker login -p ${PASSWORD} -u ${USERNAME} 
+  build:
+    commands:
+      - cd frontend || true
+      - docker pull bradatrr/sample-app 
+     

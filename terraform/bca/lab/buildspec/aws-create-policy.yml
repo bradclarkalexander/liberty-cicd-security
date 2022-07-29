@@ -1,0 +1,13 @@
+version: 0.2
+env:
+  variables:
+    AWS_REGION: "us-east-2"
+phases:
+  pre_build:
+    commands:
+      - cd terraform/bca/lab 
+  
+  build:
+    commands: |
+      aws iam list-policies | grep AWSLoadBalancerControllerIAMPolicy ||
+      aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json 
